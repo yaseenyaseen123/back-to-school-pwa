@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>العد التنازلي للعودة للمدارس</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: linear-gradient(#4CAF50, #2E7D32);
+      color: #fff;
+      padding: 50px;
+    }
+    h1 { margin-bottom: 20px; }
+    #countdown { font-size: 2.5em; margin-top: 20px; }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #fff;
+      color: #2E7D32;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>كم تبقى على العودة للمدارس؟</h1>
+  <div id="countdown"></div>
+  <button onclick="sendNotification()">إرسال تنبيه الآن</button>
+
+  <script>
+    const schoolStartJordan = new Date('2025-09-01');
+    const schoolStartPalestine = new Date('2025-08-24');
+    const today = new Date();
+    const targetDate = (schoolStartJordan > today) ? schoolStartJordan : schoolStartPalestine;
+    const oneDay = 24 * 60 * 60 * 1000;
+    const diffDays = Math.round((targetDate - today) / oneDay);
+    const country = (schoolStartJordan > today) ? "الأردن" : "فلسطين";
+    document.getElementById('countdown').textContent = `${diffDays} يوم متبقي حتى العودة للمدارس في ${country}`;
+
+    function sendNotification() {
+      if (Notification.permission === 'granted') {
+        new Notification(`تبقى ${diffDays} يوم حتى العودة للمدارس في ${country}`);
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            new Notification(`تبقى ${diffDays} يوم حتى العودة للمدارس في ${country}`);
+          }
+        });
+      } else {
+        alert(`تبقى ${diffDays} يوم حتى العودة للمدارس في ${country}`);
+      }
+    }
+
+    window.onload = () => {
+      sendNotification();
+    };
+  </script>
+</body>
+</html>
